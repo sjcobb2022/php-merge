@@ -16,6 +16,7 @@ use PhpMerge\internal\Line;
 use PhpMerge\internal\Hunk;
 use PhpMerge\internal\AbstractMergeBase;
 use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 /**
  * Class PhpMerge merges three texts by lines.
@@ -42,7 +43,11 @@ final class PhpMerge extends AbstractMergeBase implements PhpMergeInterface
     public function __construct(Differ $differ = null)
     {
         if (!$differ) {
-            $differ = new Differ();
+            $builder = new UnifiedDiffOutputBuilder(
+                "--- Original\n+++ New\n", // custom header
+                false                      // do not add line numbers to the diff
+            );
+            $differ = new Differ($builder);
         }
         $this->differ = $differ;
     }

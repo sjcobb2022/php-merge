@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace PhpMerge;
 
+use SebastianBergmann\Diff\Output\DiffOnlyOutputBuilder;
+use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use Symplify\GitWrapper\GitWrapper;
 use Symplify\GitWrapper\Exception\GitException;
 use PhpMerge\internal\Line;
@@ -30,7 +33,6 @@ use SebastianBergmann\Diff\Differ;
  */
 final class GitMerge extends AbstractMergeBase implements PhpMergeInterface
 {
-
     /**
      * The git working directory.
      *
@@ -84,7 +86,7 @@ final class GitMerge extends AbstractMergeBase implements PhpMergeInterface
     /**
      * {@inheritdoc}
      */
-    public function merge(string $base, string $remote, string $local) : string
+    public function merge(string $base, string $remote, string $local): string
     {
 
         // Skip merging if there is nothing to do.
@@ -127,7 +129,7 @@ final class GitMerge extends AbstractMergeBase implements PhpMergeInterface
      * @return string
      *   The merged text.
      */
-    protected function mergeFile(string $file, string $base, string $remote, string $local) : string
+    protected function mergeFile(string $file, string $base, string $remote, string $local): string
     {
         file_put_contents($file, $base);
         $this->git->add($file);
@@ -185,7 +187,12 @@ final class GitMerge extends AbstractMergeBase implements PhpMergeInterface
         ];
 
         // Create hunks from the text diff.
-        $differ = new Differ();
+
+        $builder = new UnifiedDiffOutputBuilder(
+            "--- Original\n+++ New\n", // custom header
+            false                      // do not add line numbers to the diff
+        );
+        $differ = new Differ($builder);
         $remoteDiff = Line::createArray($differ->diffToArray($baseText, $remoteText));
         $localDiff = Line::createArray($differ->diffToArray($baseText, $localText));
 
@@ -306,8 +313,9 @@ final class GitMerge extends AbstractMergeBase implements PhpMergeInterface
 
         $rawBase = self::splitStringByLines($baseText);
         $lastConflict = end($conflicts);
+
         // Check if the last conflict was at the end of the text.
-        if ($lastConflict->getBaseLine() + count($lastConflict->getBase()) === count($rawBase)) {
+        if ($lastConflict && $lastConflict->getBaseLine() + count($lastConflict->getBase()) === count($rawBase)) {
             // Fix the last lines of all the texts as we can not know from
             // the merged text if there was a new line at the end or not.
             $base = self::fixLastLine($lastConflict->getBase(), $rawBase);

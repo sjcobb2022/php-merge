@@ -15,13 +15,13 @@ namespace PhpMerge\Test;
 use PhpMerge\internal\Line;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 /**
  * @group internal
  */
 class LineTest extends TestCase
 {
-
     public function testCreate()
     {
 
@@ -56,9 +56,14 @@ EOD;
         new Line(Line::ADDED, "replacement\n", 1),
         new Line(Line::UNCHANGED, "unchanged\n", 2),
         new Line(Line::REMOVED, "removed\n", 3),
-        ];
+                ];
 
-        $differ = new Differ();
+        $builder = $builder = new UnifiedDiffOutputBuilder(
+            "--- Original\n+++ New\n", // custom header
+            false                      // do not add line numbers to the diff
+        );
+
+        $differ = new Differ($builder);
         $this->assertEquals($diff, $differ->diffToArray($before, $after));
 
         $this->assertEquals($lines, Line::createArray($diff));
