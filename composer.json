@@ -2,7 +2,11 @@
     "name": "bircher/php-merge",
     "type": "library",
     "description": "A PHP merge utility using the Diff php library or the command line git.",
-    "keywords": ["git", "merge", "php-merge"],
+    "keywords": [
+        "git",
+        "merge",
+        "php-merge"
+    ],
     "homepage": "https://github.com/bircher/php-merge",
     "license": "MIT",
     "authors": [
@@ -12,17 +16,17 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
-        "sebastian/diff": "^2.0|^3.0|^4.0"
+        "php": ">=8",
+        "sebastian/diff": "^5.0|^6.0"
     },
     "require-dev": {
         "symplify/git-wrapper": "^9.1|^10.0",
-        "phpunit/phpunit": "~6|~7|~8|~9",
+        "phpunit/phpunit": "~6|~7|~8|~9|~10|~11",
         "squizlabs/php_codesniffer": "~3",
         "phpstan/phpstan": "~1",
         "escapestudios/symfony2-coding-standard": "^3.5",
         "phpstan/phpstan-deprecation-rules": "^1.0",
-        "vimeo/psalm": "^4.17"
+        "vimeo/psalm": "^5"
     },
     "autoload": {
         "psr-0": {

@@ -26,7 +26,6 @@ use SebastianBergmann\Diff\Differ;
  */
 final class PhpMerge extends AbstractMergeBase implements PhpMergeInterface
 {
-
     /**
      * The differ used to create the diffs.
      *
@@ -52,7 +51,7 @@ final class PhpMerge extends AbstractMergeBase implements PhpMergeInterface
     /**
      * {@inheritdoc}
      */
-    public function merge(string $base, string $remote, string $local) : string
+    public function merge(string $base, string $remote, string $local): string
     {
         // Skip merging if there is nothing to do.
         if ($merged = AbstractMergeBase::simpleMerge($base, $remote, $local)) {
@@ -100,7 +99,7 @@ final class PhpMerge extends AbstractMergeBase implements PhpMergeInterface
      * @return string[]
      *   The merged text.
      */
-    protected static function mergeHunks(array $base, array $remote, array $local, array &$conflicts = []) : array
+    protected static function mergeHunks(array $base, array $remote, array $local, array &$conflicts = []): array
     {
         $remote = new \ArrayObject($remote);
         $local = new \ArrayObject($local);
