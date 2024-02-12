@@ -6,6 +6,7 @@
 
 ## Introduction
 
+
 When working with revisions of text one sometimes faces the problem that there
 are several revisions based off the same original text. Rather than choosing
 one and discarding the other we want to merge the two revisions.
